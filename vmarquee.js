@@ -1,5 +1,5 @@
 /*!
- * vMarquee v1.0.0
+ * vMarquee v1.0.1
  * Flexible, scalable marquee library
  * https://github.com/chx-bit/vmarquee
  * MIT License
@@ -7,7 +7,7 @@
 
 (function (global) {
 
-  const VERSION = '1.0.0';
+  const VERSION = '1.0.1';
 
   const DEFAULTS = {
     direction:    'left',
@@ -82,6 +82,7 @@
         return;
       }
 
+      const _scrollY = window.scrollY;
       this.el.innerHTML = '';
 
       const track = document.createElement('div');
@@ -106,6 +107,7 @@
       this.el.appendChild(track);
 
       this._measure(firstItem, isVertical, speed, direction);
+      requestAnimationFrame(() => window.scrollTo(0, _scrollY));
       this._attachEvents();
       this._watchResize(firstItem, isVertical, speed, direction);
     }
@@ -223,4 +225,3 @@
   }
 
 })(typeof window !== 'undefined' ? window : this);
-
