@@ -3,6 +3,12 @@
 A lightweight, flexible, and scalable marquee library. Zero dependencies, pure vanilla JS. Supports text, images, and any HTML content with full control over direction, speed, gap, rotation, and behavior via `data-*` attributes.
 
 ---
+Built by [chxbit](https://github.com/chx-bi)
+![Built with Claude](https://img.shields.io/badge/Built%20with%20Claude-D97757?logo=claude&logoColor=white)
+![version](https://img.shields.io/badge/version-1.0.0-red)
+![license](https://img.shields.io/badge/license-MIT-green)
+![size](https://img.shields.io/badge/size-5.4kb-blue)
+---
 
 ## Files
 
