@@ -13,7 +13,7 @@ A lightweight, flexible, and scalable marquee library. Zero dependencies, pure v
 
 | File | Use |
 |------|-----|
-| `vmarquee.js` | Core — development, readable with warnings |
+| `vmarquee.js` | Core — development, readable |
 | `vmarquee.min.js` | Core — production, minified |
 | `vmarquee.d.ts` | TypeScript type definitions |
 | `VMarquee.jsx` | React component (JavaScript) |
@@ -23,20 +23,20 @@ A lightweight, flexible, and scalable marquee library. Zero dependencies, pure v
 
 ## Prerequisites
 
-### Vanilla JS
-No installation required. Just load the script via CDN.
+**Vanilla JS** — no installation required. Load via CDN.
 
-### If using React
+**If using React:**
 ```bash
 npm install react react-dom
 ```
 React 18 and React 19 are both supported.
 
-### If using TypeScript
+**If using TypeScript:**
 ```bash
 npm install -D typescript
 ```
-If using TypeScript with React:
+
+**If using TypeScript + React:**
 ```bash
 npm install react react-dom
 npm install -D typescript @types/react @types/react-dom
@@ -46,12 +46,12 @@ npm install -D typescript @types/react @types/react-dom
 
 ## Installation
 
-**Production (minified)**
+**Production**
 ```html
 <script src="https://cdn.jsdelivr.net/gh/chx-bit/vmarquee@1.1.0/vmarquee.min.js"></script>
 ```
 
-**Development (readable)**
+**Development**
 ```html
 <script src="https://cdn.jsdelivr.net/gh/chx-bit/vmarquee@1.1.0/vmarquee.js"></script>
 ```
@@ -95,11 +95,11 @@ export default function App() {
 
 ### React (TSX)
 ```tsx
-import VMarquee, { VMarqueeHandle } from './VMarquee.tsx';
+import VMarquee, { Handle } from './VMarquee.tsx';
 import { useRef } from 'react';
 
 export default function App() {
-  const ref = useRef<VMarqueeHandle>(null);
+  const ref = useRef<Handle>(null);
 
   return (
     <>
@@ -129,31 +129,20 @@ export default function App() {
 
 ## JS API
 
-`vMarquee.init()` returns an array of instances in DOM order.
-
-```js
-window.addEventListener('load', () => {
-  const [m1, m2] = vMarquee.init();
-});
-```
-
-### Instance Methods
-
-| Method | Description |
-|--------|-------------|
-| `instance.pause()` | Pause the animation |
-| `instance.play()` | Resume the animation |
-| `instance.updateSpeed(ms)` | Update speed without reinitializing |
-| `instance.destroy()` | Stop animation, remove events, clean up GPU layer |
-
 ### `vMarquee.init(selector?)`
 
-Targets all elements matching the selector. Defaults to `.vmarquee`. Already-initialized elements are skipped automatically.
+Initializes all matching elements. Defaults to `.vmarquee`. Already-initialized elements are skipped.
 
 ```js
-vMarquee.init();               // targets .vmarquee
-vMarquee.init('.xmarquee');    // custom selector
-vMarquee.init('.x, .y, .z');   // multiple selectors
+vMarquee.init();                     // targets .vmarquee
+vMarquee.init('.xmarquee');          // custom selector
+vMarquee.init('.x, .y, .z');         // multiple selectors
+```
+
+Returns an array of instances in DOM order.
+
+```js
+const [m1, m2] = vMarquee.init();
 ```
 
 ### `vMarquee.getInstance(el)`
@@ -170,6 +159,15 @@ vMarquee.getInstance(el).pause();
 ```js
 console.log(vMarquee.version); // "1.1.0"
 ```
+
+### Instance Methods
+
+| Method | Description |
+|--------|-------------|
+| `instance.pause()` | Pause the animation |
+| `instance.play()` | Resume the animation |
+| `instance.updateSpeed(ms)` | Update speed without reinitializing |
+| `instance.destroy()` | Stop animation, remove events, clean up GPU layer |
 
 ---
 
@@ -188,7 +186,7 @@ console.log(vMarquee.version); // "1.1.0"
 | `className` | `string` | — | Optional CSS class |
 | `style` | `CSSProperties` | — | Optional inline styles |
 
-### Ref Handle (VMarqueeHandle)
+### Ref Handle
 
 | Method | Description |
 |--------|-------------|
@@ -196,23 +194,21 @@ console.log(vMarquee.version); // "1.1.0"
 | `ref.current.play()` | Resume the animation |
 | `ref.current.updateSpeed(ms)` | Update speed |
 | `ref.current.destroy()` | Destroy the instance |
-| `ref.current.getInstance()` | Get raw vMarquee instance |
+| `ref.current.instance` | Get raw vMarquee instance |
 
 ---
 
 ## TypeScript
 
-`vmarquee.d.ts` provides full type coverage for the core library.
+`vmarquee.d.ts` exports `Dir`, `Opts`, `Instance`, and `Static` types. `window.vMarquee` is globally typed — no extra import needed when using via CDN.
 
 ```ts
-import type { VMarqueeDirection, VMarqueeOptions, VMarqueeInstance, VMarqueeStatic } from './vmarquee';
+import type { Dir, Instance } from './vmarquee';
 
-const instance: VMarqueeInstance = vMarquee.init('.vmarquee')[0];
+const instance: Instance = vMarquee.init('.vmarquee')[0];
 instance.pause();
 instance.updateSpeed(5000);
 ```
-
-`window.vMarquee` is also globally typed — no extra imports needed when using via CDN.
 
 ---
 
@@ -233,7 +229,7 @@ instance.updateSpeed(5000);
 
 ### Vertical scroll
 ```html
-<div class="vmarquee" data-direction="up" data-speed="6000" style="height: 200px;">
+<div class="vmarquee" data-direction="up" data-speed="6000" style="height:200px">
   <div>Item 1</div>
   <div>Item 2</div>
   <div>Item 3</div>
@@ -246,29 +242,28 @@ instance.updateSpeed(5000);
   <div class="img-group">
     <img src="image1.jpg" alt="">
     <img src="image2.jpg" alt="">
-    <img src="image3.jpg" alt="">
   </div>
 </div>
 ```
 
 ```css
 .img-group { display: flex; gap: 24px; }
-.img-group img { width: 180px; height: 120px; object-fit: cover; display: block; flex-shrink: 0; }
+.img-group img { width: 180px; height: 120px; object-fit: cover; flex-shrink: 0; }
 ```
 
 ### Diagonal X pattern
 ```html
 <div class="x-wrap">
-  <div class="vmarquee vm-x1" data-direction="left"  data-speed="14000">FREE API · NO AUTH · 200+ COUNTRIES ·</div>
-  <div class="vmarquee vm-x2" data-direction="right" data-speed="14000">FREE API · NO AUTH · 200+ COUNTRIES ·</div>
+  <div class="vmarquee vm-x1" data-direction="left"  data-speed="14000">FREE API · NO AUTH ·</div>
+  <div class="vmarquee vm-x2" data-direction="right" data-speed="14000">FREE API · NO AUTH ·</div>
 </div>
 ```
 
 ```css
-.x-wrap   { position: relative; height: 400px; overflow: hidden; }
+.x-wrap { position: relative; height: 400px; overflow: hidden; }
 .vmarquee { position: absolute; width: 160%; top: 50%; left: 50%; }
-.vm-x1    { transform: translate(-50%, -50%) rotate(45deg); }
-.vm-x2    { transform: translate(-50%, -50%) rotate(-45deg); }
+.vm-x1  { transform: translate(-50%, -50%) rotate(45deg); }
+.vm-x2  { transform: translate(-50%, -50%) rotate(-45deg); }
 ```
 
 ### Fade edges
@@ -289,7 +284,7 @@ document.querySelector('#play').addEventListener('click',  () => m1.play());
 
 ## Styling
 
-vMarquee injects only the minimum styles required for animation. All visual styling is yours.
+vMarquee injects only the minimum required styles. All visual styling is yours.
 
 ```css
 .vmarquee {
@@ -306,68 +301,49 @@ vMarquee injects only the minimum styles required for animation. All visual styl
 
 ## Q&A
 
-**Q: Can I use a custom class instead of `vmarquee`?**
+**Q: Can I use a custom class instead of `.vmarquee`?**
 
-Yes. Pass your class name to `init()`:
 ```js
 vMarquee.init('.xmarquee');
-vMarquee.init('.ymarquee');
+vMarquee.init('.xmarquee, .ymarquee');
 ```
-
-Or target multiple at once:
-```js
-vMarquee.init('.xmarquee, .ymarquee, .zmarquee');
-```
-
----
 
 **Q: Does it work with React StrictMode?**
 
-Yes. The component is StrictMode safe — it destroys the previous instance before re-initializing when React mounts the component twice in development.
+Yes. The component destroys the previous instance before re-initializing — safe in StrictMode double-invoke.
 
----
+**Q: Do I need React to use vMarquee?**
 
-**Q: Do I need to install React to use vMarquee?**
+No. The core is pure vanilla JS. React and TypeScript files are optional extras for those who need them.
 
-No. The core library (`vmarquee.js` / `vmarquee.min.js`) is pure vanilla JS with zero dependencies. React and TypeScript support are optional and only needed if you use `VMarquee.jsx` or `VMarquee.tsx`.
+**Q: Animation jumps or loop is wrong?**
 
----
-
-**Q: The animation jumps or the loop is wrong. Why?**
-
-Always use `window.addEventListener('load', ...)`. The library will automatically retry up to 10 times if the element size is zero on the first frame.
-
----
+Always use `window.addEventListener('load', ...)`. The library retries up to 10 times if element size is zero on first frame.
 
 **Q: Does it handle window resize?**
 
-Yes. The library uses `ResizeObserver` to automatically recalculate the loop offset when the element changes size.
+Yes. `ResizeObserver` automatically recalculates the loop offset on resize.
 
----
+**Q: Can I put images or HTML inside?**
 
-**Q: Can I put images or any HTML inside the marquee?**
-
-Yes. Wrap multiple items in a single container:
+Yes — wrap multiple items in one container so they clone as a group:
 ```html
 <div class="vmarquee">
   <div class="group">
-    <img src="a.jpg">
-    <img src="b.jpg">
+    <img src="a.jpg"> <img src="b.jpg">
   </div>
 </div>
 ```
 
----
-
 **Q: What does `destroy()` clean up?**
 
-It removes all event listeners, disconnects the `ResizeObserver`, stops the animation, resets `will-change` to free the GPU compositor layer, and removes the `data-direction` attribute.
+Removes event listeners, disconnects `ResizeObserver`, stops animation, resets `will-change`, and removes `data-direction`.
 
 ---
 
 ## Browser Support
 
-Works in all modern browsers. `ResizeObserver` is supported in Chrome 64+, Firefox 69+, Safari 13.1+, Edge 79+. On older browsers it degrades gracefully — resize handling is simply skipped.
+All modern browsers. `ResizeObserver` supported in Chrome 64+, Firefox 69+, Safari 13.1+, Edge 79+. Degrades gracefully on older browsers — resize handling is skipped.
 
 ---
 
@@ -376,12 +352,15 @@ Works in all modern browsers. `ResizeObserver` is supported in Chrome 64+, Firef
 ### v1.1.0
 - Added React component (`VMarquee.jsx` / `VMarquee.tsx`)
 - Added TypeScript type definitions (`vmarquee.d.ts`)
+- Full rewrite — smaller, faster, more scalable
+- Core reduced from 7.3kb → 5.2kb, minified 5.6kb → 3.9kb
+- Shortened internal class names and property names
 - React StrictMode safe
-- `VMarqueeHandle` ref API for imperative control
+- `Handle` ref API for imperative control in React
 
 ### v1.0.1
-- Fixed scroll position reset after `init()` — page no longer jumps to top on load
-- Fixed `destroy()` memory leak — event listeners now correctly removed
+- Fixed scroll position reset after `init()`
+- Fixed `destroy()` memory leak
 - Fixed `will-change` not cleaned up after `destroy()`
 - Added `ResizeObserver` for automatic resize recalculation
 - Added retry logic (up to 10 attempts) for hidden elements
@@ -394,3 +373,6 @@ Works in all modern browsers. `ResizeObserver` is supported in Chrome 64+, Firef
 ## License
 
 MIT — free to use, modify, and distribute.
+
+Built by [chxbit](https://github.com/chx-bit)
+
