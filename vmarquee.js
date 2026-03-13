@@ -77,26 +77,29 @@
     }
 
     _fill(item, v, speed, dir, n) {
-      n = n || 0;
-      const is = v ? item.offsetHeight  : item.offsetWidth;
-      const cs = v ? this.el.offsetHeight : this.el.offsetWidth;
+  n = n || 0;
+  const is = v ? item.offsetHeight  : item.offsetWidth;
+  const cs = v ? this.el.offsetHeight : this.el.offsetWidth;
 
-      if (!is || !cs) {
-        if (n < 10) requestAnimationFrame(() => this._fill(item, v, speed, dir, n + 1));
-        return;
-      }
+  if (!is || !cs) {
+    if (n < 10) requestAnimationFrame(() => this._fill(item, v, speed, dir, n + 1));
+    return;
+  }
 
-      // remove previous clones
-      [...this.track.querySelectorAll('.vm__i')].slice(1).forEach(e => e.remove());
+  const sy = window.scrollY; // tambah ini
 
-      const f = document.createDocumentFragment();
-      const c = Math.ceil(cs * 3 / is) + 2;
-      for (let i = 1; i < c; i++) f.appendChild(item.cloneNode(true));
-      this.track.appendChild(f);
+  [...this.track.querySelectorAll('.vm__i')].slice(1).forEach(e => e.remove());
 
-      this.track.style.setProperty('--vmo', `-${is}px`);
-      this.track.style.animation = `${A[dir]} ${speed}ms linear infinite`;
-      if (this.paused) this.track.style.animationPlayState = 'paused';
+  const f = document.createDocumentFragment();
+  const c = Math.ceil(cs * 3 / is) + 2;
+  for (let i = 1; i < c; i++) f.appendChild(item.cloneNode(true));
+  this.track.appendChild(f);
+
+  this.track.style.setProperty('--vmo', `-${is}px`);
+  this.track.style.animation = `${A[dir]} ${speed}ms linear infinite`;
+  if (this.paused) this.track.style.animationPlayState = 'paused';
+
+  requestAnimationFrame(() => window.scrollTo(0, sy)); // tambah ini
     }
 
     _resize(item, v, speed, dir) {
