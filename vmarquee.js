@@ -27,9 +27,9 @@
   function parse(el) {
     const d = el.dataset;
     return {
-      direction:    A[d.direction] ? d.direction   : D.direction,
-      speed:        +d.speed > 0   ? +d.speed      : D.speed,
-      gap:          +d.gap  >= 0   ? +d.gap        : D.gap,
+      direction:    A[d.direction] ? d.direction  : D.direction,
+      speed:        +d.speed > 0   ? +d.speed     : D.speed,
+      gap:          +d.gap  >= 0   ? +d.gap       : D.gap,
       pauseOnHover: d.pauseOnHover !== 'false',
       rotate:       +d.rotate || D.rotate,
     };
@@ -37,12 +37,11 @@
 
   class VMarquee {
     constructor(el) {
-      this.el      = el;
-      this.track   = null;
-      this.paused  = false;
-      this.opts    = parse(el);
-      this._ob     = null;
-      this._ph     = [this.pause.bind(this), this.play.bind(this)];
+      this.el     = el;
+      this.track  = null;
+      this.paused = false;
+      this.opts   = parse(el);
+      this._ph    = [this.pause.bind(this), this.play.bind(this)];
       this._build();
     }
 
@@ -53,7 +52,6 @@
 
       if (!src) return;
 
-      const sy = window.scrollY;
       this.el.innerHTML = '';
       this.el.setAttribute('data-direction', direction);
 
@@ -72,37 +70,30 @@
 
       this._fill(item, v, speed, direction);
       this._events(true);
-      this._resize(item, v, speed, direction);
-      //requestAnimationFrame(() => window.scrollTo(0, sy));
     }
 
     _fill(item, v, speed, dir, n) {
-  n = n || 0;
-  const is = v ? item.offsetHeight  : item.offsetWidth;
-  const cs = v ? this.el.offsetHeight : this.el.offsetWidth;
+      n = n || 0;
+      const is = v ? item.offsetHeight  : item.offsetWidth;
+      const cs = v ? this.el.offsetHeight : this.el.offsetWidth;
 
-  if (!is || !cs) {
-    if (n < 10) requestAnimationFrame(() => this._fill(item, v, speed, dir, n + 1));
-    return;
-  }
+      if (!is || !cs) {
+        if (n < 10) setTimeout(() => this._fill(item, v, speed, dir, n + 1), 50);
+        return;
+      }
 
-  const sy = window.scrollY; // tambah ini
+      [...this.track.querySelectorAll('.vm__i')].slice(1).forEach(e => e.remove());
 
-  [...this.track.querySelectorAll('.vm__i')].slice(1).forEach(e => e.remove());
+      const f = document.createDocumentFragment();
+      const c = Math.ceil(cs * 3 / is) + 2;
+      for (let i = 1; i < c; i++) f.appendChild(item.cloneNode(true));
+      this.track.appendChild(f);
 
-  const f = document.createDocumentFragment();
-  const c = Math.ceil(cs * 3 / is) + 2;
-  for (let i = 1; i < c; i++) f.appendChild(item.cloneNode(true));
-  this.track.appendChild(f);
-
-  this.track.style.setProperty('--vmo', `-${is}px`);
-  this.track.style.animation = `${A[dir]} ${speed}ms linear infinite`;
-  if (this.paused) this.track.style.animationPlayState = 'paused';
-
-  //requestAnimationFrame(() => window.scrollTo(0, sy)); // tambah ini
+      this.track.style.setProperty('--vmo', `-${is}px`);
+      this.track.style.animation = `${A[dir]} ${speed}ms linear infinite`;
+      if (this.paused) this.track.style.animationPlayState = 'paused';
     }
 
-    
     _events(on) {
       if (!this.opts.pauseOnHover) return;
       const fn = on ? 'addEventListener' : 'removeEventListener';
@@ -130,7 +121,6 @@
 
     destroy() {
       this._events(false);
-      this._ob?.disconnect();
       if (this.track) {
         this.track.style.animation  = 'none';
         this.track.style.willChange = 'auto';
