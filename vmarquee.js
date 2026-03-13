@@ -73,7 +73,7 @@
       this._fill(item, v, speed, direction);
       this._events(true);
       this._resize(item, v, speed, direction);
-      requestAnimationFrame(() => window.scrollTo(0, sy));
+      //requestAnimationFrame(() => window.scrollTo(0, sy));
     }
 
     _fill(item, v, speed, dir, n) {
@@ -99,7 +99,7 @@
   this.track.style.animation = `${A[dir]} ${speed}ms linear infinite`;
   if (this.paused) this.track.style.animationPlayState = 'paused';
 
-  requestAnimationFrame(() => window.scrollTo(0, sy)); // tambah ini
+  //requestAnimationFrame(() => window.scrollTo(0, sy)); // tambah ini
     }
 
     
