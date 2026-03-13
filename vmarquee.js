@@ -102,12 +102,7 @@
   requestAnimationFrame(() => window.scrollTo(0, sy)); // tambah ini
     }
 
-    _resize(item, v, speed, dir) {
-      if (!window.ResizeObserver) return;
-      this._ob = new ResizeObserver(() => this._fill(item, v, speed, dir));
-      this._ob.observe(this.el);
-    }
-
+    
     _events(on) {
       if (!this.opts.pauseOnHover) return;
       const fn = on ? 'addEventListener' : 'removeEventListener';
